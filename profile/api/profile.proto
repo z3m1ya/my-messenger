@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package profile;
 
-option go_package = "my-messenger/profile/api";
+option go_package = "my-messenger/profile/api;profile";
 
 service ProfileService {
   rpc GetProfile (GetProfileRequest) returns (GetProfileResponse);
