@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package chats;
+
+option go_package = "my-messenger/chats/api";
+
+import "google/protobuf/timestamp.proto";
+
+message Chat {
+  string id = 1;
+  repeated string participants = 2;
+  repeated Message messages = 3;
+}
+
+message Message {
+  string id = 1;
+  string chat_id = 2;
+  string sender_id = 3;
+  string content = 4;
+  google.protobuf.Timestamp sent_time = 5; // Время отправки
+}
+
+message ListChatsRequest {
+  string user_id = 1;
+}
+
+message ListChatsResponse {
+  repeated Chat chats = 1;
+}
+
+message AddMessageRequest {
+  string chat_id = 1;
+  string sender_id = 2;
+  string content = 3;
+}
+
+message AddMessageResponse {
+  string message_id = 1;
+}
+
+service ChatService {
+  rpc ListChats(ListChatsRequest) returns (ListChatsResponse);
+  rpc AddMessage(AddMessageRequest) returns (AddMessageResponse);
+}
