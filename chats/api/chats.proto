@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package chats;
 
-option go_package = "my-messenger/chats/api";
+option go_package = "my-messenger/chats/api;chats";
 
 import "google/protobuf/timestamp.proto";
 
