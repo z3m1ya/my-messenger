@@ -3,6 +3,9 @@ package main
 import (
 	"log"
 	"net/http"
+	"profile/internal/delivery"
+	"profile/internal/repo"
+	"profile/internal/usecases"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -10,26 +13,17 @@ import (
 
 var serviceName = "profile"
 
-// Liveness probe
-func livenessHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("OK"))
-}
-
-// Readiness probe
-func readinessHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Ready"))
-}
-
 func main() {
+	repo := repo.ProfileRepository{}
+	usecase := usecases.NewProfileUsecase(repo)
+	handler := delivery.NewProfileHandler(usecase)
+
 	r := mux.NewRouter()
+	r.HandleFunc("/profile/{id}", handler.GetProfile).Methods("GET")
+	r.HandleFunc("/profile/{id}", handler.UpdateProfile).Methods("PUT")
+	r.HandleFunc("/profile/{id}/friends", handler.GetFriends).Methods("GET")
+	r.HandleFunc("/profile/{id}/friend-requests", handler.SendFriendRequest).Methods("POST")
 
-	// Определяем маршруты для проб
-	r.HandleFunc("/health/liveness", livenessHandler).Methods("GET")
-	r.HandleFunc("/health/readiness", readinessHandler).Methods("GET")
-
-	// Устанавливаем параметры сервера
 	srv := &http.Server{
 		Addr:         ":8080",
 		Handler:      r,
