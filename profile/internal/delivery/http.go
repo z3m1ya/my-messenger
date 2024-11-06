@@ -47,7 +47,7 @@ func (h *ProfileHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-}
+} //1
 
 func (h *ProfileHandler) GetFriends(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
