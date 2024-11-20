@@ -1,0 +1,76 @@
+openapi: 3.0.0
+info:
+  title: Chat Service API
+  version: 1.0.0
+paths:
+  /chats:
+    get:
+      summary: Get chat list between users
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ID of the user to get chats for
+        - in: query
+          name: friendId
+          schema:
+            type: string
+          required: true
+          description: ID of the friend to get chats with
+      responses:
+        '200':
+          description: List of chats between the users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    chatId:
+                      type: string
+                    messages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          senderId:
+                            type: string
+                          text:
+                            type: string
+                          timestamp:
+                            type: string
+                            format: date-time
+        '404':
+          description: Chats not found
+
+  /chats/{chatId}/messages:
+    post:
+      summary: Add a new message to a chat
+      parameters:
+        - in: path
+          name: chatId
+          schema:
+            type: string
+          required: true
+          description: ID of the chat to add the message to
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                senderId:
+                  type: string
+                text:
+                  type: string
+      responses:
+        '201':
+          description: Message added successfully
+        '400':
+          description: Invalid input
+        '404':
+          description: Chat not found
