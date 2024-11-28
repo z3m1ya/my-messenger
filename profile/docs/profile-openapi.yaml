@@ -1,0 +1,138 @@
+swagger: "2.0"
+info:
+  title: Profile Service API
+  version: 1.0.0
+paths:
+  /profile/{id}:
+    get:
+      summary: Get profile by ID
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Profile data
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              email:
+                type: string
+              friends:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: Profile not found
+
+    put:
+      summary: Update profile
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+      responses:
+        '200':
+          description: Profile updated
+        '400':
+          description: Invalid input
+
+  /profile/{id}/friends:
+    get:
+      summary: Get friend list by profile ID
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Friend list
+          schema:
+            type: array
+            items:
+              type: string
+        '404':
+          description: Profile not found
+
+  /profile/{id}/friend-requests:
+    post:
+      summary: Send friend request
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              targetId:
+                type: string
+      responses:
+        '200':
+          description: Friend request sent
+        '400':
+          description: Invalid input
+
+  /profile/{id}/friends/{targetId}:
+    delete:
+      summary: Remove friend
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+        - in: path
+          name: targetId
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Friend removed
+        '404':
+          description: Friend not found
+
+  /profile/{id}/friend-requests/{targetId}:
+    patch:
+      summary: Accept or reject friend request
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+        - in: path
+          name: targetId
+          type: string
+          required: true
+        - in: query
+          name: action
+          type: string
+          enum:
+            - accept
+            - reject
+      responses:
+        '200':
+          description: Friend request processed
+        '400':
+          description: Invalid action
+        '404':
+          description: Request not found
